@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.londonappbrewery.destini.models.Answer;
 import com.londonappbrewery.destini.models.Story;
 
+import java.io.Serializable;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -16,43 +18,21 @@ public class MainActivity extends AppCompatActivity {
     Button mAnswerTop;
     Button mAnswerBottom;
     // TODO: Declare as variaveis aqui:
-    Answer mT1StoryAns1 = new Answer(R.string.T1_Ans1);
-    Answer mT1StoryAns2 = new Answer(R.string.T1_Ans2);
-
-    Answer mT2StoryAns1 = new Answer(R.string.T2_Ans1);
-    Answer mT2StoryAns2 = new Answer(R.string.T2_Ans2);
-
-    Answer mT3StoryAns1 = new Answer(R.string.T3_Ans1);
-    Answer mT3StoryAns2 = new Answer(R.string.T3_Ans2);
-    Story[] mStories = new Story[] {
-            new Story(R.string.T1_Story, mT1StoryAns1, mT1StoryAns2),
-            new Story(R.string.T2_Story, mT2StoryAns1, mT2StoryAns2),
-            new Story(R.string.T3_Story, mT3StoryAns1, mT3StoryAns2),
-            new Story(R.string.T4_End),
-            new Story(R.string.T5_End),
-            new Story(R.string.T6_End),
-    };
 
     //indice corrente da historia
-    private int mStoryIndex = 0;
-    Story mStorySelected;
+    //private Story mStorySelected;
+    Story mT1Story = new Story(R.string.T1_Story);
+    Story mT2Story = new Story(R.string.T2_Story);
+    Story mT3Story = new Story(R.string.T3_Story);
+    Story mT4Story = new Story(R.string.T4_End);
+    Story mT5Story = new Story(R.string.T5_End);
+    Story mT6Story = new Story(R.string.T6_End);
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("storyIndex", mStoryIndex);
-    }
-
+    private Story mStorySelected = mT1Story;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (savedInstanceState != null) {
-            mStoryIndex = savedInstanceState.getInt("storyIndex");
-        }
-
-        mStorySelected = mStories[mStoryIndex];
 
 
         //TODO: Faça o link do layout com a activity
@@ -60,22 +40,71 @@ public class MainActivity extends AppCompatActivity {
         mAnswerTop = findViewById(R.id.buttonTop);
         mAnswerBottom = findViewById(R.id.buttonBottom);
 
+
+        if (savedInstanceState!=null){
+            mStorySelected = (Story) savedInstanceState.getSerializable("StoryKey");
+        }
+        //TODO:faça o mapeamento da história
+
+
+        mT1Story.setAnswerTop(new Answer(R.string.T1_Ans1, mT3Story));
+        mT1Story.setAnswerBottom(new Answer(R.string.T1_Ans2, mT2Story));
+
+        mT2Story.setAnswerTop(new Answer(R.string.T2_Ans1, mT3Story));
+        mT2Story.setAnswerBottom(new Answer(R.string.T2_Ans2, mT4Story));
+
+        mT3Story.setAnswerTop(new Answer(R.string.T3_Ans1, mT6Story));
+        mT3Story.setAnswerBottom(new Answer(R.string.T3_Ans2, mT5Story));
+
         mStoryTextView.setText(mStorySelected.getStoryID());
         mAnswerTop.setText(mStorySelected.getAnswerTop().getAnswerID());
         mAnswerBottom.setText(mStorySelected.getAnswerBottom().getAnswerID());
 
-        //TODO:faça o mapeamento da história
-        mT1StoryAns1.setChildStory(mStories[2]);
-        mT1StoryAns2.setChildStory(mStories[1]);
-
-        mT3StoryAns1.setChildStory(mStories[5]);
-        mT3StoryAns2.setChildStory(mStories[4]);
-
-        mT2StoryAns1.setChildStory(mStories[2]);
-        mT2StoryAns2.setChildStory(mStories[3]);
 
         // TODO: Coloque o evento do click do botão, caso precise colocar a visibilidade no botão invisivel utilize a função
-        // do botão setVisibility(View.GONE):
+        mAnswerTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateStory(mStorySelected.getAnswerTop().getChildStory());
+                mStoryTextView.setText(mStorySelected.getStoryID());
+                if (mStorySelected == mT4Story || mStorySelected == mT5Story || mStorySelected == mT6Story) {
+                    mAnswerTop.setVisibility(View.GONE);
+                    mAnswerBottom.setVisibility(View.GONE);
+                }else{
+                    mAnswerTop.setText(mStorySelected.getAnswerTop().getAnswerID());
+                    mAnswerBottom.setText(mStorySelected.getAnswerBottom().getAnswerID());
+                }
+
+            }
+        });
+
+        mAnswerBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateStory(mStorySelected.getAnswerBottom().getChildStory());
+                mStoryTextView.setText(mStorySelected.getStoryID());
+
+                if (mStorySelected == mT4Story || mStorySelected == mT5Story || mStorySelected == mT6Story) {
+                    mAnswerTop.setVisibility(View.GONE);
+                    mAnswerBottom.setVisibility(View.GONE);
+                }else{
+                    mAnswerTop.setText(mStorySelected.getAnswerTop().getAnswerID());
+                    mAnswerBottom.setText(mStorySelected.getAnswerBottom().getAnswerID());
+                }
+            }
+        });
+
+
+
+    }
+    public void updateStory(Story newStory){
+        mStorySelected = newStory;
+
+    }
+
+    protected void onSaveInstanceState (Bundle outState){
+        super.onSaveInstanceState(outState);;
+        outState.putSerializable("StoryKey", (Serializable) mStorySelected);
 
     }
 
