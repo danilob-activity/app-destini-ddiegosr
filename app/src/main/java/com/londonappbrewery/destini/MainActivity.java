@@ -21,14 +21,14 @@ public class MainActivity extends AppCompatActivity {
 
     //indice corrente da historia
     //private Story mStorySelected;
-    Story mT1Story = new Story(R.string.T1_Story);
-    Story mT2Story = new Story(R.string.T2_Story);
-    Story mT3Story = new Story(R.string.T3_Story);
-    Story mT4Story = new Story(R.string.T4_End);
-    Story mT5Story = new Story(R.string.T5_End);
-    Story mT6Story = new Story(R.string.T6_End);
+    Story T1 = new Story(R.string.T1_Story);
+    Story T2 = new Story(R.string.T2_Story);
+    Story T3 = new Story(R.string.T3_Story);
+    Story T4 = new Story(R.string.T4_End);
+    Story T5 = new Story(R.string.T5_End);
+    Story T6 = new Story(R.string.T6_End);
 
-    private Story mStorySelected = mT1Story;
+    private Story mStorySelected = T1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,14 +47,14 @@ public class MainActivity extends AppCompatActivity {
         //TODO:faça o mapeamento da história
 
 
-        mT1Story.setAnswerTop(new Answer(R.string.T1_Ans1, mT3Story));
-        mT1Story.setAnswerBottom(new Answer(R.string.T1_Ans2, mT2Story));
+        T1.setAnswerTop(new Answer(R.string.T1_Ans1, T3));
+        T1.setAnswerBottom(new Answer(R.string.T1_Ans2, T2));
 
-        mT2Story.setAnswerTop(new Answer(R.string.T2_Ans1, mT3Story));
-        mT2Story.setAnswerBottom(new Answer(R.string.T2_Ans2, mT4Story));
+        T2.setAnswerTop(new Answer(R.string.T2_Ans1, T3));
+        T2.setAnswerBottom(new Answer(R.string.T2_Ans2, T4));
 
-        mT3Story.setAnswerTop(new Answer(R.string.T3_Ans1, mT6Story));
-        mT3Story.setAnswerBottom(new Answer(R.string.T3_Ans2, mT5Story));
+        T3.setAnswerTop(new Answer(R.string.T3_Ans1, T6));
+        T3.setAnswerBottom(new Answer(R.string.T3_Ans2, T5));
 
         mStoryTextView.setText(mStorySelected.getStoryID());
         mAnswerTop.setText(mStorySelected.getAnswerTop().getAnswerID());
@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         // TODO: Coloque o evento do click do botão, caso precise colocar a visibilidade no botão invisivel utilize a função
-        mAnswerTop.setOnClickListener(new View.OnClickListener() {
+         mAnswerTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 updateStory(mStorySelected.getAnswerTop().getChildStory());
                 mStoryTextView.setText(mStorySelected.getStoryID());
-                if (mStorySelected == mT4Story || mStorySelected == mT5Story || mStorySelected == mT6Story) {
+                if (mStorySelected == T4 || mStorySelected == T5 || mStorySelected == T6) {
                     mAnswerTop.setVisibility(View.GONE);
                     mAnswerBottom.setVisibility(View.GONE);
                 }else{
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 updateStory(mStorySelected.getAnswerBottom().getChildStory());
                 mStoryTextView.setText(mStorySelected.getStoryID());
 
-                if (mStorySelected == mT4Story || mStorySelected == mT5Story || mStorySelected == mT6Story) {
+                if (mStorySelected == T4 || mStorySelected == T5 || mStorySelected == T6) {
                     mAnswerTop.setVisibility(View.GONE);
                     mAnswerBottom.setVisibility(View.GONE);
                 }else{
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         mStorySelected = newStory;
 
     }
-
+	@Override
     protected void onSaveInstanceState (Bundle outState){
         super.onSaveInstanceState(outState);;
         outState.putSerializable("StoryKey", (Serializable) mStorySelected);
